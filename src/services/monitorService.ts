@@ -60,11 +60,23 @@ export class MonitorService {
 
   public async update(id: string, input: UpdateMonitorInput): Promise<Monitor> {
     const current = await this.get(id);
+    const nextUrl = input.url ? new URL(input.url).toString() : current.url;
+
+    if (nextUrl !== current.url) {
+      const existing = await this.repository.getMonitors();
+      if (existing.some((monitor) => monitor.id !== id && monitor.url === nextUrl)) {
+        throw new ConflictError("A monitor for this URL already exists.");
+      }
+    }
 
     const next: Monitor = {
       ...current,
-      ...input,
-      url: input.url ? new URL(input.url).toString() : current.url,
+      name: input.name ?? current.name,
+      url: nextUrl,
+      intervalSeconds: input.intervalSeconds ?? current.intervalSeconds,
+      timeoutMs: input.timeoutMs ?? current.timeoutMs,
+      expectedStatus: input.expectedStatus ?? current.expectedStatus,
+      degradedAfterMs: input.degradedAfterMs ?? current.degradedAfterMs,
       updatedAt: new Date().toISOString()
     };
 
