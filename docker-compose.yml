@@ -1,0 +1,17 @@
+services:
+  pulsewatch:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      HOST: 0.0.0.0
+      DATA_FILE: /app/data/pulsewatch.json
+      SCHEDULER_TICK_MS: 5000
+      HISTORY_LIMIT: 100
+    volumes:
+      - pulsewatch-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  pulsewatch-data:
