@@ -94,6 +94,17 @@ npm test
 npm run build
 ```
 
+### Run the compiled build
+
+After a successful build, start the compiled application with:
+
+```bash
+npm run build
+npm start
+```
+
+`npm start` runs the generated `dist/src/server.js` entry point, so run the build step first whenever the TypeScript source changes.
+
 ## Docker
 
 ```bash
